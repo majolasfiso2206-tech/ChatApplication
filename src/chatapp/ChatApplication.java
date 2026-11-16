@@ -1,13 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package chatapp;
 
 import java.util.Scanner;
 
 /**
- * Runs registration, login and the QuickChat messaging menu.
+ * Runs registration, login and the QuickChat messaging menu,
+ * including Part 3 Stored Messages & Reporting options.
  */
 public class ChatApplication {
 
@@ -23,6 +20,7 @@ public class ChatApplication {
         String lastName = SCANNER.nextLine();
 
         Login login = new Login(firstName, lastName);
+        Message.setCurrentDeveloper(firstName + " " + lastName);
 
         System.out.println("\n=== Registration ===");
 
@@ -73,6 +71,9 @@ public class ChatApplication {
 
         System.out.println("\nWelcome to QuickChat.");
 
+        // Load any previously stored JSON messages into the storedMessages array
+        Message.readJsonIntoStoredArray();
+
         int messageLimit = readPositiveInt(
                 "How many messages would you like to enter? "
         );
@@ -91,6 +92,7 @@ public class ChatApplication {
             System.out.println("1) Send Messages");
             System.out.println("2) Show recently sent messages");
             System.out.println("3) Quit");
+            System.out.println("4) Stored Messages");
             System.out.print("Enter your choice: ");
 
             String choice = SCANNER.nextLine().trim();
@@ -115,7 +117,14 @@ public class ChatApplication {
                     break;
 
                 case "2":
-                    System.out.println("Coming Soon.");
+                    Message helper = new Message(0, "+2700000000", "Placeholder");
+                    String recent = helper.printMessages();
+                    if (recent.isEmpty()) {
+                        System.out.println("No messages have been sent yet.");
+                    } else {
+                        System.out.println("\n=== Recently Sent Messages ===");
+                        System.out.print(recent);
+                    }
                     break;
 
                 case "3":
@@ -123,10 +132,86 @@ public class ChatApplication {
                     System.out.println("Thank you for using QuickChat.");
                     break;
 
+                case "4":
+                    runStoredMessagesSubmenu();
+                    break;
+
                 default:
                     System.out.println(
-                            "Invalid option. Please enter 1, 2 or 3."
+                            "Invalid option. Please enter 1, 2, 3 or 4."
                     );
+            }
+        }
+    }
+
+    /**
+     * Runs the fourth main menu option ("Stored Messages") with sub-options a to f.
+     */
+    private static void runStoredMessagesSubmenu() {
+        boolean inSubmenu = true;
+
+        while (inSubmenu) {
+            System.out.println("\n=== Stored Messages & Reports ===");
+            System.out.println("a) Display the sender and recipient of all stored messages");
+            System.out.println("b) Display the longest stored message");
+            System.out.println("c) Search for a message ID and display the corresponding recipient and message");
+            System.out.println("d) Search for all the messages stored for a particular recipient");
+            System.out.println("e) Delete a message using the message hash");
+            System.out.println("f) Display a report that lists the full details of all the stored messages");
+            System.out.println("g) Read JSON file into Stored Messages array and display");
+            System.out.println("x) Return to main menu");
+            System.out.print("Enter your choice: ");
+
+            String subChoice = SCANNER.nextLine().trim().toLowerCase();
+
+            switch (subChoice) {
+                case "a":
+                    System.out.println("\n" + Message.displaySenderAndRecipientOfStoredMessages());
+                    break;
+
+                case "b":
+                    String longest = Message.displayLongestMessage();
+                    if (longest.isEmpty()) {
+                        System.out.println("\nNo messages available.");
+                    } else {
+                        System.out.println("\nLongest message: " + longest);
+                    }
+                    break;
+
+                case "c":
+                    System.out.print("Enter the Message ID to search: ");
+                    String searchID = SCANNER.nextLine().trim();
+                    System.out.println("\n" + Message.searchByMessageID(searchID));
+                    break;
+
+                case "d":
+                    System.out.print("Enter the recipient phone number to search: ");
+                    String searchRecipient = SCANNER.nextLine().trim();
+                    System.out.println("\n" + Message.searchMessagesByRecipient(searchRecipient));
+                    break;
+
+                case "e":
+                    System.out.print("Enter the Message Hash to delete: ");
+                    String hashToDelete = SCANNER.nextLine().trim();
+                    System.out.println("\n" + Message.deleteMessageByHash(hashToDelete));
+                    break;
+
+                case "f":
+                    System.out.println("\n=== Full Message Report ===");
+                    System.out.println(Message.displayMessageReport());
+                    break;
+
+                case "g":
+                    System.out.println("\n=== Stored Messages Loaded from JSON ===");
+                    System.out.println(Message.readJsonIntoStoredArray());
+                    break;
+
+                case "x":
+                    inSubmenu = false;
+                    break;
+
+                default:
+                    System.out.println("Invalid choice. Please select a-g or x.");
             }
         }
     }
