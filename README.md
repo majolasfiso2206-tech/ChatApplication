@@ -48,6 +48,13 @@ The project version history includes the following milestones spanning Part 1 an
 9. `git commit -m "Add sentMessage workflow supporting send, discard, and store options"`
 10. `git commit -m "Implement JSON storage functionality using the Gson library for persistent records"`
 11. `git commit -m "Complete JUnit 4 unit test suite and achieve 100 percent passing test coverage"`
+12. git commit -m "Implement parallel arrays and JSON file reader with source attribution in Message.java"
+13. git commit -m "Add fourth main menu option for Stored Messages and search/report submenu"
+14. git commit -m "Add Part 3 JUnit tests for array population, search, delete by hash, and reports"
+15. git commit -m "Configure GitHub Actions workflow TestJava.yml to run JUnit 4 tests"
+16. git commit -m "Update README.md with Part 3 stored messages and reporting documentation"
+17. git commit -m "Finalize Part 3 code comments and verify all unit tests pass"
+
 
 ---
 
